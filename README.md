@@ -111,4 +111,6 @@ Moving onto the `DriverEntry()` function - it is analogous to the `main()` funct
 
 Moving onto the main function body, we are first greeted with a bunch of `DbgPrint()` functions which look very similar to our good friend `printf()`, and to be honest, it mostly works the same except for floating points and some IRQL stuff (Read more [here](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-dbgprint)). Unlike `printf()` which prints to console, The `DbgPrint()` routine sends a message to the kernel debugger. We use the `DbgPrint()` function to print the address of the function parameters. 
 
+Next up, we move to the memory allocation part of the driver. In the driver code, we have a global variable `g_RegPath` of the type `UNICODE_STRING` where we would store a copy of the Parameter key aka the `RegistryPath` so that we can share it among other functions. This is similar to the times in Usermode programming when we allocate memory on the heap to share structures across functions. Whereas in user mode, we use good ol' `malloc()`, in DriverLand we have the `ExAllocatePool2()` function.
+
 
