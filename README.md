@@ -22,4 +22,6 @@ The first thing we need to do is to start a WDM project in Visual Studio:
 
     > Note that under `Driver Files`, you would find a file called `HelloWorldDriver.inf`, which can be used, with some tweaking, to install the resultant driver, but since we wont be installing the driver using it, feel free to get rid of it. 
 
-- Finally, under the `Source Files`, add a `HelloWorld.c`file to store the Driver code. 
+- Finally, under the `Source Files`, add a `HelloWorld.c`file to store the Driver code.
+
+    > Also, for this project, I would recommend setting Warning Levels to `Wall` instead of `W4` by going to Project Properties->C/C++->General->Warning Level
