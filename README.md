@@ -17,6 +17,7 @@ The first thing we need to do is to start a WDM project in Visual Studio:
 
     ![Alt text](<imgs/WDM template.png>)
 
-- Give your project the name you want and choose the location where you want to create it. 
+- Give your project the name you want and choose the location where you want to create it. For this example, I chose the name `HelloWorldDriver`
 - You should have your template ready! 
 
+> Note that under `Driver Files`, you would find a file called `HelloWorldDriver.inf`, which can be used, with some tweaking, to install the resultant driver, but since we wont be installing the driver using it, feel free to get rid of it. 
