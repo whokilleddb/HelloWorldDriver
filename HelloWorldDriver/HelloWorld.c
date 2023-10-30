@@ -12,10 +12,15 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) 
 
 	// Allocate memory for variable
 	g_RegPath.Buffer = (PWSTR)ExAllocatePool2(POOL_FLAG_PAGED, RegistryPath->Length, DRIVER_TAG);
+	if (g_RegPath.Buffer == NULL) {
+		DbgPrint("Error allocating memory!\n");
+		return STATUS_NO_MEMORY;
+	}
 
 	// Copy Registry Path
 	memcpy(g_RegPath.Buffer, RegistryPath->Buffer,RegistryPath->Length);
 	g_RegPath.Length = g_RegPath.MaximumLength = RegistryPath->Length;
+	DbgPrint("Parameter Key copy: %wZ\n", g_RegPath);
 
 	// Unload Function
 	DriverObject->DriverUnload = UnloadMe;
