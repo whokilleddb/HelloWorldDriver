@@ -143,4 +143,8 @@ Since we do not use the pointer to the `DriverObject`, we use the `UNREFERENCED_
 
 ## Compiling 
 
-We can easily compile the code using Visual Studio. 
+We can easily compile the code using Visual Studio build options. Sticking to debug builds for now, we should have two files at the end of the build: 
+-  HelloWorldDriver.pdb : The Debug symbols for the driver
+-  HelloWorldDriver.sys : The actual driver
+
+Copy these over to the target machine where we would be testing the driver and follow along. 
