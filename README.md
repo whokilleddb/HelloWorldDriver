@@ -63,7 +63,9 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) 
 
 void UnloadMe(PDRIVER_OBJECT DriverObject) {
 	UNREFERENCED_PARAMETER(DriverObject);
-	ExFreePool(g_RegPath.Buffer);
+	if (g_RegPath.Buffer != NULL) {
+		ExFreePool(g_RegPath.Buffer);
+	}
 	DbgPrint("Bye Bye from HelloWorld Driver\n");
 }
 ```
@@ -121,6 +123,24 @@ And then, just like we do with `malloc()`, we check if the function failed, in w
 
 If the function succeeds, we fill out the `Length` and `MaximumLength` fields with the number of bytes in the buffer, use `memcpy()` to copy over the bytes to the allocated memory space and use `DbgPrint()` with the `%wZ` format specifier to print out the copied string.
 
-There is one final step before we exit: specifying an unload routine. Remember the `DriverObject` variable? It has a member called `Unload` which takes the address to a function which would be called when the driver is being unloaded. This allows us to perform some cleanup operations. 
+There is one final step before we exit: specifying an unload routine. Remember the `DriverObject` variable? It has a member called `Unload` which takes the address to a function which would be called when the driver is being unloaded. This allows us to perform some cleanup operations in order to prevent BSODs and deallocate any dynamic memory. Finally, we exit with `STATUS_SUCCESS`.
 
+However, this is not the end. We still have the unload routine. The unload routine for our driver looks like:
 
+```c
+void UnloadMe(PDRIVER_OBJECT DriverObject) {
+	UNREFERENCED_PARAMETER(DriverObject);
+	if (g_RegPath.Buffer != NULL) {
+		ExFreePool(g_RegPath.Buffer);
+	}
+	DbgPrint("Bye Bye from HelloWorld Driver\n");
+}
+```
+
+The function definition for unload routines is also very strict. While the function name can vary, the rest of the function header should remain the same. Unload routines return nothing (understandably) and they only take in a pointer to the driver object.
+
+Since we do not use the pointer to the `DriverObject`, we use the `UNREFERENCED_PARAMETER` macro to get rid of the `C4100` warning, aka the Unused Variable warning. Next up, we check if the buffer we allocated is `NULL` or not, if not, we go ahead and free the memory using `ExFreePool()`, just like we do with `free()`. I would like to add one note here - try to be as paranoid as you can while writing Drivers. For example, even if we skip the `NULL` checks here, we dont even get any warning, but we still do because the memory might have been freed somewhere else (especially in larger code bases), so it is good to put checks in place to prevent a Double-Free like situation and cause a BSOD. 
+
+## Compiling 
+
+We can easily compile the code using Visual Studio. 

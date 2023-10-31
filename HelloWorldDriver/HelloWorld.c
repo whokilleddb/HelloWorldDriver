@@ -29,6 +29,8 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) 
 
 void UnloadMe(PDRIVER_OBJECT DriverObject) {
 	UNREFERENCED_PARAMETER(DriverObject);
+	if (g_RegPath.Buffer != NULL) {
+		ExFreePool(g_RegPath.Buffer);
+	}
 	DbgPrint("Bye Bye from HelloWorld Driver\n");
-	ExFreePool(g_RegPath.Buffer);
 }
