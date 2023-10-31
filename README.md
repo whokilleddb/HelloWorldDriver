@@ -117,3 +117,10 @@ We need to allocate memory for the `Buffer` part of the global variable which is
 - `RegistryPath->Length` - Number of bytes to copy 
 - `DRIVER_TAG` - The pool tag, aka a non-zero character literal of one to four characters delimited by single quotation marks (for example, `hwdb`), that is associated with a dynamically allocated chunk of pool memory and can be used to identify the source of Pool Memory leaks. It is something which has trickled down from the now-deprecated `ExAllocatePoolWithTag()` function. The string is usually specified in reverse order (for example, `bdwh`) - aka little Endian. Each ASCII character in the tag must be a value in the range 0x20 (space) to 0x7E (tilde). Each allocation code path should use a unique pool tag to help debuggers and verifiers identify the code path.
 
+And then, just like we do with `malloc()`, we check if the function failed, in which case it returnss `NULL`, and if it did, we return `STATUS_NO_MEMORY`.
+
+If the function succeeds, we fill out the `Length` and `MaximumLength` fields with the number of bytes in the buffer, use `memcpy()` to copy over the bytes to the allocated memory space and use `DbgPrint()` with the `%wZ` format specifier to print out the copied string.
+
+There is one final step before we exit: specifying an unload routine. Remember the `DriverObject` variable? It has a member called `Unload` which takes the address to a function which would be called when the driver is being unloaded. This allows us to perform some cleanup operations. 
+
+
