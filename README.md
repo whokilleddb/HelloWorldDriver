@@ -33,7 +33,7 @@ The code for the driver looks as follows:
 
 ```c
 #include <ntddk.h>
-#define DRIVER_TAG 'hwdb'
+#define DRIVER_TAG 'bdwh'
 
 UNICODE_STRING g_RegPath;
 
@@ -108,9 +108,12 @@ Moving onto the `DriverEntry()` function - it is analogous to the `main()` funct
 	- `PDRIVER_OBJECT DriverObject`: A pointer to a `DRIVER_OBJECT` structure that represents the driver's WDM driver object. Detailing the individual memembers of the structure is beyond the scope of this blog, but we would discuss the some of them as we come across them.
 	- `PUNICODE_STRING RegistryPath`: A pointer to a UNICODE_STRING structure that specifies the path to the driver's Parameters key in the registry. The driver's Parameters key can contain configuration information for your driver.
 
-
 Moving onto the main function body, we are first greeted with a bunch of `DbgPrint()` functions which look very similar to our good friend `printf()`, and to be honest, it mostly works the same except for floating points and some IRQL stuff (Read more [here](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-dbgprint)). Unlike `printf()` which prints to console, The `DbgPrint()` routine sends a message to the kernel debugger. We use the `DbgPrint()` function to print the address of the function parameters. 
 
 Next up, we move to the memory allocation part of the driver. In the driver code, we have a global variable `g_RegPath` of the type `UNICODE_STRING` where we would store a copy of the Parameter key aka the `RegistryPath` so that we can share it among other functions. This is similar to the times in Usermode programming when we allocate memory on the heap to share structures across functions. Whereas in user mode, we use good ol' `malloc()`, in DriverLand we have the `ExAllocatePool2()` function.
 
+We need to allocate memory for the `Buffer` part of the global variable which is large enough to hold the corresponding buffer of the `RegistryPath` variable. The [`ExAllocatePool2()`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-exallocatepool2) function allocates pool memory. The parameters to the function are as follows:
+- `POOL_FLAG_PAGED` - The [`POOL_FLAG`](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/pool_flags) which tell the function that we want the memory to be in a Paged Pool as we dont want it to live in the physical memory.
+- `RegistryPath->Length` - Number of bytes to copy 
+- `DRIVER_TAG` - The pool tag, aka a non-zero character literal of one to four characters delimited by single quotation marks (for example, `hwdb`), that is associated with a dynamically allocated chunk of pool memory and can be used to identify the source of Pool Memory leaks. It is something which has trickled down from the now-deprecated `ExAllocatePoolWithTag()` function. The string is usually specified in reverse order (for example, `bdwh`) - aka little Endian. Each ASCII character in the tag must be a value in the range 0x20 (space) to 0x7E (tilde). Each allocation code path should use a unique pool tag to help debuggers and verifiers identify the code path.
 
