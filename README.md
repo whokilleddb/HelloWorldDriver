@@ -153,3 +153,23 @@ We can easily compile the code using Visual Studio build options. Sticking to de
 -  HelloWorldDriver.sys : The actual driver
 
 Copy these over to the target machine where we would be testing the driver and follow along. 
+
+## Installing Driver
+
+To install custom drivers, there are special functions for that. See [CmRegisterCallback()](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-cmregistercallback?redirectedfrom=MSDN), [CmRegisterCallbackEx()](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-cmregistercallbackex?redirectedfrom=MSDN) and [Filtering Registry Calls](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/filtering-registry-calls?redirectedfrom=MSDN) on MSDN.
+
+However, we can use the `Service Controller` binary(`sc.exe`) to do just that. Firstly, we need to create a Kernel-mode service with:
+
+```
+sc create HelloWorldDriver type= kernel binPath= C:\MyDrivers\HelloWorldDriver.sys
+```
+
+> Note: The spaces after `type= ` and `binPath= ` are not a typing error, they MUST be there if the command is to run successfully.
+
+The above command creates a kernel service with the name `HelloWorldDriver` which loads the driver located at `C:\MyDrivers\HelloWorldDriver.sys`.
+
+Now, load up `DebugView` with Admin privileges with 
+and under the `Capture` tab, have the shown options selected. 
+
+![](./imgs/DebugView.png)
+
