@@ -8,7 +8,12 @@ For building and testing the Driver we need to have a couple of things:
 
 -  Two windows Machines: One to develop the driver on, and another to test it on (this better be a Virtual Machine)
 - On the Development machine - follow the steps listed [here](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk) to have the right SDK and WDK.
-- Have the `DebugView` 
+- Have the `DebugView` tool from SysInternals on the Test Machine
+- On the test machine, turn off Integrity checks and turn on test signing. This can be done by runnning the following commands from an Admin prompt and then rebooting the system:
+```
+bcdedit.exe -set loadoptions DISABLE_INTEGRITY_CHECKS
+bcdedit.exe -set TESTSIGNING ON
+```
 
 ## Creating A WDM Project
 
