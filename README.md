@@ -173,3 +173,34 @@ and under the `Capture` tab, have the shown options selected.
 
 ![](./imgs/DebugView.png)
 
+Once the event capture is on, we can start the driver with:
+```
+sc start HelloWorldDriver
+```
+
+This should start our driver and we should see the `DbgPrint()` statements pop up in the `DebugView` Window.
+
+![](./imgs/sc_start.png)
+
+Noticing the output in the `DebugView` we see a path to a registry key. Opening the path in the registry editor, we are greeted with this:
+
+![](./imgs/registry.PNG)
+
+These registry options can be used to control the behaviour of the Driver. 
+
+Finally, we can unload the driver with:
+```
+sc stop HelloWorldDriver
+```
+
+![](./imgs/sc_stop.png)
+
+As soon as we unload the driver, we again get to see the message from the Unload routine in the `DebugView()` window. 
+
+Thus, we finally loaded and unloaded our first Windows Driver yay!
+
+## Conclusion
+
+I know this blog/repo is like the literal `Hello World!` of Driver programming and there is still a lot to cover - including setting up Debuggers, advanced drivers, etc. In this blog post, I have tried to provide a very gentle introduction to Windows Driver Development and I would be following up with more posts on related topics in the future. Till next time, see you space cowboy. 
+
+![](https://i.pinimg.com/originals/43/9d/e3/439de394ba9fe35b3319ad86cc97f311.gif)
