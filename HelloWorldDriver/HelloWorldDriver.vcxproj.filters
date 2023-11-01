@@ -19,8 +19,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="HelloWorldDriver.inf">
-      <Filter>Driver Files</Filter>
-    </Inf>
+    <ClCompile Include="HelloWorld.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
