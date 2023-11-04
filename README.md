@@ -15,6 +15,10 @@ bcdedit.exe -set loadoptions DISABLE_INTEGRITY_CHECKS
 bcdedit.exe -set TESTSIGNING ON
 ```
 
+> If this command results in "The value is protected by Secure Boot policy and cannot be modified or deleted", then reboot the PC, go into BIOS settings, and disable Secure Boot. BitLocker may also affect your ability to modify this setting. ([link](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option))
+>
+> bcdedit.exe -set TESTSIGNING ON
+
 ## Creating A WDM Project
 
 The first thing we need to do is to start a WDM project in Visual Studio:
